@@ -13,7 +13,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     qemu-system-x86 \
     qemu-utils \
     git \
-    wget
+    wget \
+    apt-transport-https \
+    software-properties-common
 
 # Download Windows 11 Evaluation ISO from Microsoft
 RUN mkdir /home/windows11-iso
