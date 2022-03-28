@@ -6,7 +6,7 @@
 
 - [x] Get ubuntu image  
 - [x] Install necessary dependencies  
-- [ ] Download Windows 11 Evaluation ISO from Microsoft
+- [x] Download Windows 11 Evaluation ISO from Microsoft
 - [ ] Emulate TPM 2.0  
 - [ ] Start-up QEMU VM  
 - [ ] Start the VM every time the container starts  
