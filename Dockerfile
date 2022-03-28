@@ -12,10 +12,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     p7zip-full \
     qemu-system-x86 \
     qemu-utils \
+    qemu-kvm \
     git \
     wget \
     apt-transport-https \
-    software-properties-common
+    software-properties-common 
 
 # Download Windows 11 Evaluation ISO from Microsoft
 RUN mkdir /home/windows11-iso
@@ -28,9 +29,13 @@ RUN dpkg -i packages-microsoft-prod.deb
 RUN apt update 
 RUN apt install -y powershell
 
+# Enable KVM 
+RUN chown $(id -u):$(id -g) /dev/kvm 2>/dev/null || true'
+
 # Download Windows 11 Pro with English International
-RUN wget https://raw.githubusercontent.com/pbatard/Fido/master/Fido.ps1
-RUN pwsh Fido.ps1 -Win 11 -Ed Pro -Arch x64 -Lang English International
+# RUN wget https://raw.githubusercontent.com/pbatard/Fido/master/Fido.ps1
+# RUN pwsh Fido.ps1 -Win 11 -Ed Pro -Lang English International
+RUN wget http://192.168.0.111:8080/images/Win11_EnglishInternational_x64v1.iso
 
 # Rename ISO file
 RUN find . -type f -name 'Win11*.iso' -exec sh -c 'x="{}"; mv "$x" "windows11.iso"' \;
