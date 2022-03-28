@@ -30,7 +30,7 @@ RUN apt install -y powershell
 
 # Download Windows 11 Pro with English International
 RUN wget https://raw.githubusercontent.com/pbatard/Fido/master/Fido.ps1
-RUN pwsh Fido.ps1 -Win 11 -Ed Pro -Lang English International
+RUN pwsh Fido.ps1 -Win 11 -Ed Pro -Arch x64 -Lang English International
 
 # Rename ISO file
 RUN find . -type f -name 'Win11*.iso' -exec sh -c 'x="{}"; mv "$x" "windows11.iso"' \;
