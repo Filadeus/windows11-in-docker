@@ -5,7 +5,7 @@
 ## TODO  
 
 - [x] Get ubuntu image  
-- [ ] Install necessary dependencies  
+- [x] Install necessary dependencies  
 - [ ] Download Windows 11 Evaluation ISO from Microsoft
 - [ ] Emulate TPM 2.0  
 - [ ] Start-up QEMU VM  
