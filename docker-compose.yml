@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  win11:
+    container_name: windows11
+    build:
+      context: .
+      args:
+        - SIZE=120GB
+      image: windows11
+      privileged: true
+      environment:
+        - DISPLAY=${DISPLAY:-:0}
+      network_mode: "host"
+      volumes:
+        - /mnt/wslg/.X11-unix:/tmp/.X11-unix
+        - /dev:/dev
+        - windows11-in-docker_data:/home
+
+volumes:
+  windows11-in-docker_data:
+    name: windows11-in-docker_data
