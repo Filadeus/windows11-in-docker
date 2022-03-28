@@ -30,7 +30,7 @@ RUN apt update
 RUN apt install -y powershell
 
 # Enable KVM 
-RUN chown $(id -u):$(id -g) /dev/kvm 2>/dev/null || true'
+RUN chown $(id -u):$(id -g) /dev/kvm 2>/dev/null || true
 
 # Download Windows 11 Pro with English International
 # RUN wget https://raw.githubusercontent.com/pbatard/Fido/master/Fido.ps1
@@ -42,7 +42,10 @@ RUN find . -type f -name 'Win11*.iso' -exec sh -c 'x="{}"; mv "$x" "windows11.is
 
 # Prepare system .img file and ISO for VM
 RUN qemu-img create -f qcow2 windows11.img 120G
-RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -cdrom /home/windows11-iso/windows11.iso -m 4096 -enable-kvm
+# RUN apt install kmod
+# RUN modprobe kvm
+# RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -cdrom /home/windows11-iso/windows11.iso -m 4096 -enable-kvm
+RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -cdrom /home/windows11-iso/windows11.iso -m 4096
 
 # TPM Emulation
 ## build swtpm
@@ -66,7 +69,7 @@ RUN apt install ../swtpm*.deb
 
 RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2
 
-# Starting VM
+# Starting VM (-enable-kvm currently disabled)
 RUN qemu-system-x86_64 -hda /home.windows11-iso/windows11.img -boot d -m 4096 -enable-kvm \
     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
     -tpmdev emulator,id=tpm0,chardev=chrtpm \
