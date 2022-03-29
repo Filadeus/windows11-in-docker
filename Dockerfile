@@ -72,15 +72,25 @@ RUN dpkg-buildpackage -us -uc -j4
 RUN apt install ../swtpm*.deb
 
 WORKDIR /home/windows11-iso
+# VOLUME ["/tmp/.X11-unix"]
+# ENV DISPLAY=:0.0
 
 # Install Windows to VM disk
-RUN qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
+RUN apt install -y qemu-system-gui x11-apps
+# RUN ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
+# RUN export DISPLAY=${DISPLAY:-:0}
+# RUN ls /tmp/.X11-unix
+# RUN qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
+CMD qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
 
-# Enable vTPM
-RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2
-
-# Starting VM (-enable-kvm currently disabled)
-RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 \
+# Create vTPM emulated device
+RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2 && qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 \
     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
     -tpmdev emulator,id=tpm0,chardev=chrtpm \
     -device tpm-tis,tpmdev=tpm0
+
+# Starting VM (-enable-kvm currently disabled)
+# RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 \
+#    -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
+#    -tpmdev emulator,id=tpm0,chardev=chrtpm \
+#    -device tpm-tis,tpmdev=tpm0

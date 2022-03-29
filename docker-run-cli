@@ -1,0 +1,4 @@
+docker run run \
+ --rm -e "DISPLAY=${DISPLAY:-:0}" \
+ -v /mnt/wslg/.X11-unix:/tmp/.X11-unix \
+ windows11-in-docker
