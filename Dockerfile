@@ -71,11 +71,16 @@ WORKDIR /home/windows11-iso/swtpm
 RUN dpkg-buildpackage -us -uc -j4
 RUN apt install ../swtpm*.deb
 
+WORKDIR /home/windows11-iso
+
+# Install Windows to VM disk
+RUN qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
+
 # Enable vTPM
 RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2
 
 # Starting VM (-enable-kvm currently disabled)
-RUN qemu-system-x86_64 -hda /home.windows11-iso/windows11.img -boot d -m 4096 \
+RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 \
     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
     -tpmdev emulator,id=tpm0,chardev=chrtpm \
     -device tpm-tis,tpmdev=tpm0
