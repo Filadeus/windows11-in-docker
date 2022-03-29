@@ -1,4 +1,5 @@
 FROM ubuntu:20.04 AS build
+SHELL ["/bin/bash", "-c"]
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt update \
@@ -86,12 +87,19 @@ RUN apt install -y qemu-system-gui x11-apps
 #     -tpmdev emulator,id=tpm0,chardev=chrtpm \
 #     -device tpm-tis,tpmdev=tpm0 --verbose
 
+# Enable Secure Boot
+RUN apt install ovmf
+
 RUN touch start.sh \
     && chmod +x ./start.sh \
-    && tee -a start.sh <<< '#!/bin/bash' \
+    && tee -a start.sh <<< '#!/bin/sh' \
     && tee -a start.sh <<< 'ls /tmp/emulated_tpm' \
-    && tee -a start.sh <<< 'qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0'
-    
+    && tee -a start.sh <<< 'exec qemu-system-x86_64 -hda /home/windows11-iso/windows11.img \' \
+    && tee -a start.sh <<< '-boot d -cdrom ./windows11.iso -m 4096 \' \
+    && tee -a start.sh <<< '-chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \' \
+    && tee -a start.sh <<< '-tpmdev emulator,id=tpm0,chardev=chrtpm \' \
+    && tee -a start.sh <<< '-device tpm-tis,tpmdev=tpm0'
+
 CMD ./start.sh
 
 # Create vTPM emulated device
