@@ -2,14 +2,14 @@
 
 ## What's happening inside the container
 
-## TODO  
+## TODO
 
-- [x] Get ubuntu image  
-- [x] Install necessary dependencies  
+- [x] Get ubuntu image
+- [x] Install necessary dependencies
 - [x] Download Windows 11 Evaluation ISO from Microsoft
 - [ ] Enable KVM support for better perfomance
-- [x] Emulate TPM 2.0  
-- [ ] Start-up QEMU VM  
-- [ ] Start the VM every time the container starts  
+- [x] Emulate TPM 2.0
+- [ ] Start-up QEMU VM
+- [ ] Start the VM every time the container starts
 - [ ] **Replace CMD in Dockerfile with a proper start.sh file.**
-- [ ] **Cleanup Dockerfile**  
+- [ ] **Cleanup Dockerfile**
