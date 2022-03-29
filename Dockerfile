@@ -49,7 +49,7 @@ RUN qemu-img create -f qcow2 windows11.img 120G
 
 # TPM Emulation
 ## build swtpm
-# RUN mkdir /tmp/emulated_tpm
+RUN mkdir /tmp/emulated_tpm
 # RUN apt install -y dpkg-dev debhelper libssl-dev libtool net-tools \
 # libfuse-dev libglib2.0-dev libgmp-dev expect libtasn1-dev socat \
 # python3-twisted gnutls-dev gnutls-bin  libjson-glib-dev gawk git \
@@ -81,7 +81,11 @@ RUN apt install -y qemu-system-gui x11-apps
 # RUN export DISPLAY=${DISPLAY:-:0}
 # RUN ls /tmp/.X11-unix
 # RUN qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
-CMD qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
+RUN ls /tmp/emulated_tpm > ls -sf /dev/stdout
+CMD qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk \
+     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
+     -tpmdev emulator,id=tpm0,chardev=chrtpm \
+     -device tpm-tis,tpmdev=tpm0 --verbose
 
 # Create vTPM emulated device
 # RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2 && qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 \
