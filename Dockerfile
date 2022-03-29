@@ -49,27 +49,27 @@ RUN qemu-img create -f qcow2 windows11.img 120G
 
 # TPM Emulation
 ## build swtpm
-RUN mkdir /tmp/emulated_tpm
-RUN apt install -y dpkg-dev debhelper libssl-dev libtool net-tools \
-libfuse-dev libglib2.0-dev libgmp-dev expect libtasn1-dev socat \
-python3-twisted gnutls-dev gnutls-bin  libjson-glib-dev gawk git \
-python3-setuptools softhsm2 libseccomp-dev automake autoconf libtool \
-gcc build-essential libssl-dev dh-exec pkg-config dh-autoreconf
-RUN git clone https://github.com/stefanberger/libtpms.git
+# RUN mkdir /tmp/emulated_tpm
+# RUN apt install -y dpkg-dev debhelper libssl-dev libtool net-tools \
+# libfuse-dev libglib2.0-dev libgmp-dev expect libtasn1-dev socat \
+# python3-twisted gnutls-dev gnutls-bin  libjson-glib-dev gawk git \
+# python3-setuptools softhsm2 libseccomp-dev automake autoconf libtool \
+# gcc build-essential libssl-dev dh-exec pkg-config dh-autoreconf
+# RUN git clone https://github.com/stefanberger/libtpms.git
 # RUN cd libtpms
-WORKDIR /home/windows11-iso/libtpms
-RUN ./autogen.sh --with-openssl
-RUN make dist
-RUN dpkg-buildpackage -us -uc -j4
-RUN apt install ../libtpms*.deb
+# WORKDIR /home/windows11-iso/libtpms
+# RUN ./autogen.sh --with-openssl
+# RUN make dist
+# RUN dpkg-buildpackage -us -uc -j4
+# RUN apt install ../libtpms*.deb
 
-WORKDIR /home/windows11-iso
+# WORKDIR /home/windows11-iso
 
-RUN git clone https://github.com/stefanberger/swtpm.git
+# RUN git clone https://github.com/stefanberger/swtpm.git
 # RUN cd swtpm
-WORKDIR /home/windows11-iso/swtpm
-RUN dpkg-buildpackage -us -uc -j4
-RUN apt install ../swtpm*.deb
+# WORKDIR /home/windows11-iso/swtpm
+# RUN dpkg-buildpackage -us -uc -j4
+# RUN apt install ../swtpm*.deb
 
 WORKDIR /home/windows11-iso
 # VOLUME ["/tmp/.X11-unix"]
