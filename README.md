@@ -11,3 +11,4 @@
 - [x] Emulate TPM 2.0  
 - [ ] Start-up QEMU VM  
 - [ ] Start the VM every time the container starts  
+- [ ] **Cleanup Dockerfile**  
