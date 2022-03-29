@@ -81,11 +81,18 @@ RUN apt install -y qemu-system-gui x11-apps
 # RUN export DISPLAY=${DISPLAY:-:0}
 # RUN ls /tmp/.X11-unix
 # RUN qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk
-RUN ls /tmp/emulated_tpm > ls -sf /dev/stdout
-CMD qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk \
-     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
-     -tpmdev emulator,id=tpm0,chardev=chrtpm \
-     -device tpm-tis,tpmdev=tpm0 --verbose
+# CMD qemu-system-x86_64 -hda ./windows11.img -boot d -cdrom ./windows11.iso -m 4096 -display gtk \
+#     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
+#     -tpmdev emulator,id=tpm0,chardev=chrtpm \
+#     -device tpm-tis,tpmdev=tpm0 --verbose
+
+RUN touch start.sh \
+    && chmod +x ./start.sh \
+    && tee -a start.sh <<< '#!/bin/bash' \
+    && tee -a start.sh <<< 'ls /tmp/emulated_tpm' \
+    && tee -a start.sh <<< 'qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0'
+    
+CMD ./start.sh
 
 # Create vTPM emulated device
 # RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2 && qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -m 4096 \
