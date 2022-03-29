@@ -45,7 +45,7 @@ RUN qemu-img create -f qcow2 windows11.img 120G
 # RUN apt install kmod
 # RUN modprobe kvm
 # RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -cdrom /home/windows11-iso/windows11.iso -m 4096 -enable-kvm
-RUN qemu-system-x86_64 -hda /home/windows11-iso/windows11.img -boot d -cdrom /home/windows11-iso/windows11.iso -m 4096
+# DELETE ORIGINAL INSTALLATION ISO AFTER
 
 # TPM Emulation
 ## build swtpm
@@ -56,21 +56,26 @@ python3-twisted gnutls-dev gnutls-bin  libjson-glib-dev gawk git \
 python3-setuptools softhsm2 libseccomp-dev automake autoconf libtool \
 gcc build-essential libssl-dev dh-exec pkg-config dh-autoreconf
 RUN git clone https://github.com/stefanberger/libtpms.git
-RUN cd libtpms
-RUN ./autogeb.sh --with-openssl
+# RUN cd libtpms
+WORKDIR /home/windows11-iso/libtpms
+RUN ./autogen.sh --with-openssl
 RUN make dist
 RUN dpkg-buildpackage -us -uc -j4
 RUN apt install ../libtpms*.deb
 
+WORKDIR /home/windows11-iso
+
 RUN git clone https://github.com/stefanberger/swtpm.git
-RUN cd swtpm
+# RUN cd swtpm
+WORKDIR /home/windows11-iso/swtpm
 RUN dpkg-buildpackage -us -uc -j4
 RUN apt install ../swtpm*.deb
 
+# Enable vTPM
 RUN swtpm socket --tpmstate dir=/tmp/emulated_tpm --ctrl type=unixio,path=/tmp/emulated_tpm/swtpm-sock --log level=20 --tpm2
 
 # Starting VM (-enable-kvm currently disabled)
-RUN qemu-system-x86_64 -hda /home.windows11-iso/windows11.img -boot d -m 4096 -enable-kvm \
+RUN qemu-system-x86_64 -hda /home.windows11-iso/windows11.img -boot d -m 4096 \
     -chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \
     -tpmdev emulator,id=tpm0,chardev=chrtpm \
     -device tpm-tis,tpmdev=tpm0
