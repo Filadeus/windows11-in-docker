@@ -16,6 +16,6 @@
   - [x] Add a CDROM storage device with Windows 11 ISO
   - [ ] Add a CDROM storage device with VirtIO Windows Drivers
   - [ ] Minimum CPU allocation: 4. Socket: 1; Cores: 2; Threads: 2
-  - [ ] Enable UEFI boot. Requirements: Chipset: i440FX; Firmware: UEFI x86_64:/usr/share/OVMF/OVMF_CODE.fd 
+  - [ ] Enable UEFI boot. Requirements: Chipset: i440FX; Firmware: UEFI x86_64:/usr/share/OVMF/OVMF_CODE.fd
 - [ ] **Replace CMD in Dockerfile with a proper start.sh file.**
 - [ ] **Cleanup Dockerfile**
