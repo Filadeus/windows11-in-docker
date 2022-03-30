@@ -98,7 +98,8 @@ RUN touch start.sh \
     && tee -a start.sh <<< '-boot d -cdrom ./windows11.iso -m 4096 \' \
     && tee -a start.sh <<< '-chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \' \
     && tee -a start.sh <<< '-tpmdev emulator,id=tpm0,chardev=chrtpm \' \
-    && tee -a start.sh <<< '-device tpm-tis,tpmdev=tpm0'
+    && tee -a start.sh <<< '-device tpm-tis,tpmdev=tpm0 \' \
+    && tee -a start.sh <<< ''
 
 CMD ./start.sh
 
