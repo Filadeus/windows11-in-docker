@@ -94,12 +94,15 @@ RUN touch start.sh \
     && chmod +x ./start.sh \
     && tee -a start.sh <<< '#!/bin/sh' \
     && tee -a start.sh <<< 'ls /tmp/emulated_tpm' \
-    && tee -a start.sh <<< 'exec qemu-system-x86_64 -hda /home/windows11-iso/windows11.img \' \
+    && tee -a start.sh <<< 'exec qemu-system-x86_64 \' \ 
+    && tee -a start.sh <<< '-hda /home/windows11-iso/windows11.img \' \
+    && tee -a start.sh <<< ' \' \
     && tee -a start.sh <<< '-boot d -cdrom ./windows11.iso -m 4096 \' \
     && tee -a start.sh <<< '-chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \' \
     && tee -a start.sh <<< '-tpmdev emulator,id=tpm0,chardev=chrtpm \' \
     && tee -a start.sh <<< '-device tpm-tis,tpmdev=tpm0 \' \
-    && tee -a start.sh <<< ''
+    && tee -a start.sh <<< '-net nic,model=virtio \' \
+    && tee -a start.sh <<< ' \' \
 
 CMD ./start.sh
 
