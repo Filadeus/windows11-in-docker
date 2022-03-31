@@ -36,6 +36,7 @@ RUN chown $(id -u):$(id -g) /dev/kvm 2>/dev/null || true
 # Download Windows 11 Pro with English International
 # RUN wget https://raw.githubusercontent.com/pbatard/Fido/master/Fido.ps1
 # RUN pwsh Fido.ps1 -Win 11 -Ed Pro -Lang English International
+# RUN wget http://192.168.0.113:8000/Win11_EnglishInternational_x64v1.iso swap with the line under
 RUN wget http://192.168.0.111:8080/images/Win11_EnglishInternational_x64v1.iso
 
 # Rename ISO file
