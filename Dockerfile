@@ -33,13 +33,15 @@ RUN apt install -y powershell
 # Enable KVM 
 RUN chown $(id -u):$(id -g) /dev/kvm 2>/dev/null || true
 
-# Download Windows 11 Pro with English International
+# Download Windows 11 Pro with English International and Virtio
 # RUN wget https://raw.githubusercontent.com/pbatard/Fido/master/Fido.ps1
 # RUN pwsh Fido.ps1 -Win 11 -Ed Pro -Lang English International
 RUN wget http://192.168.0.113:8000/Win11_EnglishInternational_x64v1.iso
+RUN wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
 
-# Rename ISO file
+# Rename ISO file and virtio ISO file
 RUN find . -type f -name 'Win11*.iso' -exec sh -c 'x="{}"; mv "$x" "windows11.iso"' \;
+RUN find . -type f -name 'virtio-win*.iso' -exec sh -c 'x="{}"; mv "$x" "virtio-win.iso"' \;
 
 # Prepare system .img file and ISO for VM
 RUN qemu-img create -f qcow2 windows11.img 120G
@@ -96,13 +98,14 @@ RUN touch start.sh \
     && tee -a start.sh <<< 'ls /tmp/emulated_tpm' \
     && tee -a start.sh <<< 'exec qemu-system-x86_64 \' \ 
     && tee -a start.sh <<< '-hda /home/windows11-iso/windows11.img \' \
-    && tee -a start.sh <<< ' \' \
-    && tee -a start.sh <<< '-boot d -cdrom ./windows11.iso -m 4096 \' \
+    && tee -a start.sh <<< '-device -drive file=/home/windows11-iso/windows11.img,if=virtio \' \
+    && tee -a start.sh <<< '-boot d -cdrom /home/windows11-iso/windows11.iso \' \
+    && tee -a start.sh <<< '-boot g -cdrom /home/windows11-iso/virtio-win.iso'
     && tee -a start.sh <<< '-chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \' \
     && tee -a start.sh <<< '-tpmdev emulator,id=tpm0,chardev=chrtpm \' \
     && tee -a start.sh <<< '-device tpm-tis,tpmdev=tpm0 \' \
     && tee -a start.sh <<< '-net nic,model=virtio \' \
-    && tee -a start.sh <<< ' \' \
+    && tee -a start.sh <<< '-cpu host -smp 4,cores=2 -m 8192 \' \
 
 CMD ./start.sh
 

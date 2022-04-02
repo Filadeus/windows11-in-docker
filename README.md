@@ -4,6 +4,7 @@
 
 ## TODO
 
+- [ ] Might try using Makefile and m4
 - [x] Get ubuntu image
 - [x] Install necessary dependencies
 - [x] Download Windows 11 Evaluation ISO from Microsoft
