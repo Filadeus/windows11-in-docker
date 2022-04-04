@@ -15,7 +15,7 @@
 - [ ] Install Windows 11 ISO (make it persistent)
 - [ ] Write a script to start up the VM every time the container starts
   - [ ] Sata Disk 1 bus must be `VirtIO` type, storage format: `qcow2`
-  - [ ] NIC's device model: `VirtIO`
+  - [x] NIC's device model: `VirtIO`
   - [x] Add a CDROM storage device with Windows 11 ISO
   - [ ] Add a CDROM storage device with VirtIO Windows Drivers
   - [ ] Minimum CPU allocation: 4. Socket: 1; Cores: 2; Threads: 2

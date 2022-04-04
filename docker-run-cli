@@ -1,0 +1,6 @@
+docker run --rm -e "DISPLAY=${DISPLAY:-:0}" \
+ -v /mnt/wslg/.X11-unix:/tmp/.X11-unix \
+ -v /tmp/emulated_tpm:/tmp/emulated_tpm \
+ windows11
+
+ docker run --rm -e "DISPLAY=${DISPLAY:-:0}" -v /mnt/wslg/.X11-unix:/tmp/.X11-unix -v /tmp/emulated_tpm:/tmp/emulated_tpm windows11
