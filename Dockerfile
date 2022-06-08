@@ -100,7 +100,7 @@ RUN touch start.sh \
     && tee -a start.sh <<< '-hda /home/windows11-iso/windows11.img \' \
     && tee -a start.sh <<< '-device -drive file=/home/windows11-iso/windows11.img,if=virtio \' \
     && tee -a start.sh <<< '-boot d -cdrom /home/windows11-iso/windows11.iso \' \
-    && tee -a start.sh <<< '-boot g -cdrom /home/windows11-iso/virtio-win.iso'
+    && tee -a start.sh <<< '-boot g -cdrom /home/windows11-iso/virtio-win.iso' \
     && tee -a start.sh <<< '-chardev socket,id=chrtpm,path=/tmp/emulated_tpm/swtpm-sock \' \
     && tee -a start.sh <<< '-tpmdev emulator,id=tpm0,chardev=chrtpm \' \
     && tee -a start.sh <<< '-device tpm-tis,tpmdev=tpm0 \' \
